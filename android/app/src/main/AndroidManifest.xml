@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="填空策"
+        android:label="行策词鉴"
         android:name="${applicationName}"
         android:icon="@drawable/ic_launcher">
         <activity
