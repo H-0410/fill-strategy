@@ -21,7 +21,7 @@ ThemeData buildTheme({
           bodyColor: const Color(0xFF1D2129),
           displayColor: const Color(0xFF1D2129),
         ),
-    cardTheme: CardThemeData(
+    cardTheme: CardTheme(
       surfaceTintColor: Colors.white,
       elevation: 0,
       margin: const EdgeInsets.only(bottom: 12),
