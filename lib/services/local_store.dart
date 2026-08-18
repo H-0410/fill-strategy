@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStore {
@@ -61,7 +60,6 @@ class LocalStore {
   }
 
   bool get eyeCare => prefs.getBool('eye_care') ?? false;
-
   double get fontScale => prefs.getDouble('font_scale') ?? 1;
 
   Future<void> setEyeCare(bool value) {
@@ -77,6 +75,33 @@ class LocalStore {
             '{"total":0,"correct":0,"minutes":0,"groups":{}}',
       );
 
+  /// 实时记录单题答题结果（每答一题调用一次）
+  Future<void> recordAnswer(int groupId, bool isCorrect) async {
+    final old = stats;
+    old['total'] = (old['total'] as int) + 1;
+    if (isCorrect) {
+      old['correct'] = (old['correct'] as int) + 1;
+    }
+    final groups = Map<String, dynamic>.from(old['groups'] as Map? ?? {});
+    final item = Map<String, dynamic>.from(
+      groups['$groupId'] as Map? ?? {'total': 0, 'correct': 0},
+    );
+    item['total'] = (item['total'] as int) + 1;
+    if (isCorrect) {
+      item['correct'] = (item['correct'] as int) + 1;
+    }
+    groups['$groupId'] = item;
+    old['groups'] = groups;
+    await prefs.setString('stats', jsonEncode(old));
+  }
+
+  /// 记录学习时长（练习结束时调用）
+  Future<void> recordMinutes(int minutes) async {
+    final old = stats;
+    old['minutes'] = (old['minutes'] as int) + minutes;
+    await prefs.setString('stats', jsonEncode(old));
+  }
+
   Future<void> record({
     required int total,
     required int correct,
@@ -87,7 +112,6 @@ class LocalStore {
     old['total'] = (old['total'] as int) + total;
     old['correct'] = (old['correct'] as int) + correct;
     old['minutes'] = (old['minutes'] as int) + minutes;
-
     final groups = Map<String, dynamic>.from(old['groups'] as Map? ?? {});
     groupScore.forEach((id, score) {
       final item = Map<String, dynamic>.from(
@@ -97,7 +121,6 @@ class LocalStore {
       item['correct'] = (item['correct'] as int) + score[1];
       groups['$id'] = item;
     });
-
     old['groups'] = groups;
     await prefs.setString('stats', jsonEncode(old));
   }
@@ -109,4 +132,3 @@ class LocalStore {
     await prefs.remove('notes');
   }
 }
-
