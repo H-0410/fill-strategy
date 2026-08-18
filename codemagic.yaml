@@ -12,6 +12,9 @@ workflows:
         script: |
           rm -rf android
           flutter create --platforms android .
+      - name: 升级Kotlin版本到1.9.20，解决插件版本冲突
+        script: |
+          sed -i '' 's/ext.kotlin_version = .*/ext.kotlin_version = "1.9.20"/' android/build.gradle
       - name: flutter pub get
         script: flutter pub get
       - name: compile release apk
