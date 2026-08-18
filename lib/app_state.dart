@@ -67,8 +67,15 @@ class AppState extends ChangeNotifier {
   }
 
   /// 实时记录单题答题结果
-  Future<void> recordAnswer(int groupId, bool isCorrect) async {
-    await store.recordAnswer(groupId, isCorrect);
+  /// [wordName] 词语名称，用于判断是否首次答题
+  /// [wasWrong] 该词之前是否在错题本中
+  Future<void> recordAnswer(
+    int groupId,
+    String wordName,
+    bool isCorrect,
+    bool wasWrong,
+  ) async {
+    await store.recordAnswer(groupId, wordName, isCorrect, wasWrong);
     notifyListeners();
   }
 
