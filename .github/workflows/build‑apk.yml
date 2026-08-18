@@ -34,3 +34,9 @@ jobs:
         with:
           name: 填空策-apk安装包
           path: build/app/outputs/flutter-apk/app-release.apk
+      - name: Flutter pub get
+  run: flutter pub get
+
+      - name: Build Release APK
+        run: flutter build apk --release --target-platform android-arm64
+
