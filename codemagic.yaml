@@ -7,11 +7,8 @@ workflows:
       flutter: 3.22.2
       vars:
         FLUTTER_GRADLE_GENERATE_LOCAL_MAVEN: "false"
-    triggering:
-      push:
-        branches:
-          - main
-    building:
-      targets:
-        android:
-          build_command: flutter build apk --release
+    scripts:
+      - name: Build Android APK
+        script: flutter build apk --release
+    artifacts:
+      - build/app/outputs/flutter-apk/app-release.apk
