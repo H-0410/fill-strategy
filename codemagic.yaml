@@ -1,0 +1,17 @@
+workflows:
+  Default Workflow:
+    name: Default Workflow
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    environment:
+      flutter: 3.22.2
+      vars:
+        FLUTTER_GRADLE_GENERATE_LOCAL_MAVEN: "false"
+    triggering:
+      push:
+        branches:
+          - main
+    building:
+      targets:
+        android:
+          build_command: flutter build apk --release
