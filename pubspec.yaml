@@ -18,5 +18,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  app-name: "行策词鉴"
   assets:
     - assets/json/word_bank.json
