@@ -971,18 +971,25 @@ class _QuizPageState extends State<QuizPage> {
 
   void _submit() async {
     final correctAnswer = selected == q.correctIndex;
+    // 必须在修改错题本之前记录该词之前是否答错
+    final wasWrong = widget.state.wrongCounts.containsKey(q.word.name);
     if (correctAnswer) {
       correct++;
       // 答对时，如果该词在错题本中则移除
-      if (widget.state.wrongCounts.containsKey(q.word.name)) {
+      if (wasWrong) {
         await widget.state.removeWrong(q.word.name);
       }
     }
     if (!correctAnswer) {
       await widget.state.wrong(q.word.name);
     }
-    // 实时记录答题统计
-    await widget.state.recordAnswer(q.word.groupId, correctAnswer);
+    // 实时记录答题统计（传递词语名和之前是否答错，避免重复计数）
+    await widget.state.recordAnswer(
+      q.word.groupId,
+      q.word.name,
+      correctAnswer,
+      wasWrong,
+    );
     // 实时记录学习时长（增量）
     final currentMin = DateTime.now().difference(started).inMinutes;
     if (currentMin > _recordedMinutes) {
