@@ -76,22 +76,67 @@ class LocalStore {
       );
 
   /// 实时记录单题答题结果（每答一题调用一次）
-  Future<void> recordAnswer(int groupId, bool isCorrect) async {
+  /// [wordName] 词语名称，用于判断是否首次答题
+  /// [wasWrong] 该词之前是否在错题本中（用于判断是否错题重做）
+  Future<void> recordAnswer(
+    int groupId,
+    String wordName,
+    bool isCorrect,
+    bool wasWrong,
+  ) async {
     final old = stats;
-    old['total'] = (old['total'] as int) + 1;
-    if (isCorrect) {
-      old['correct'] = (old['correct'] as int) + 1;
+    // 全局已答词语列表，用于避免重复计数
+    final answered =
+        List<String>.from(old['answeredWords'] as List? ?? []);
+    final isFirstTime = !answered.contains(wordName);
+
+    if (isFirstTime) {
+      // 首次答这个词：total +1
+      answered.add(wordName);
+      old['total'] = (old['total'] as int) + 1;
+      if (isCorrect) {
+        old['correct'] = (old['correct'] as int) + 1;
+      }
+    } else {
+      // 非首次：不增加 total
+      if (isCorrect && wasWrong) {
+        // 错题重做答对 → correct +1（正确率上升）
+        old['correct'] = (old['correct'] as int) + 1;
+      } else if (!isCorrect && !wasWrong) {
+        // 已掌握的词重做答错 → correct -1（正确率下降）
+        old['correct'] = (old['correct'] as int) - 1;
+      }
+      // 错题重做答错 → correct 不变（不再下降）
     }
+    old['answeredWords'] = answered;
+
+    // 组别统计同理
     final groups = Map<String, dynamic>.from(old['groups'] as Map? ?? {});
     final item = Map<String, dynamic>.from(
-      groups['$groupId'] as Map? ?? {'total': 0, 'correct': 0},
+      groups['$groupId'] as Map? ??
+          {'total': 0, 'correct': 0, 'answeredWords': []},
     );
-    item['total'] = (item['total'] as int) + 1;
-    if (isCorrect) {
-      item['correct'] = (item['correct'] as int) + 1;
+    final groupAnswered =
+        List<String>.from(item['answeredWords'] as List? ?? []);
+    final groupFirstTime = !groupAnswered.contains(wordName);
+
+    if (groupFirstTime) {
+      groupAnswered.add(wordName);
+      item['total'] = (item['total'] as int) + 1;
+      if (isCorrect) {
+        item['correct'] = (item['correct'] as int) + 1;
+      }
+    } else {
+      if (isCorrect && wasWrong) {
+        item['correct'] = (item['correct'] as int) + 1;
+      } else if (!isCorrect && !wasWrong) {
+        item['correct'] = (item['correct'] as int) - 1;
+      }
     }
+    item['answeredWords'] = groupAnswered;
     groups['$groupId'] = item;
     old['groups'] = groups;
+
     await prefs.setString('stats', jsonEncode(old));
   }
 
