@@ -1907,6 +1907,38 @@ class _MistakesPageState extends State<MistakesPage> {
                   const Icon(Icons.chevron_right,
                       size: 18, color: neutralGray),
                   const Spacer(),
+                  // 移除选中错题（仅错题本 tab）
+                  if (tab == 0) ...[
+                    GestureDetector(
+                      onTap: selected.isEmpty
+                          ? null
+                          : () async {
+                              for (final name in selected.toList()) {
+                                await state.removeWrong(name);
+                              }
+                              setState(() => selected.clear());
+                            },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: selected.isEmpty
+                              ? neutralGray.withOpacity(0.3)
+                              : dangerRed,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Text(
+                          '移除选中',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                  ],
                   GestureDetector(
                     onTap: selected.isEmpty
                         ? null
