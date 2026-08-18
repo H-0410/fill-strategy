@@ -959,6 +959,10 @@ class _QuizPageState extends State<QuizPage> {
     final correctAnswer = selected == q.correctIndex;
     if (correctAnswer) {
       correct++;
+      // 答对时，如果该词在错题本中则移除
+      if (widget.state.wrongCounts.containsKey(q.word.name)) {
+        await widget.state.removeWrong(q.word.name);
+      }
     }
     if (!correctAnswer) {
       await widget.state.wrong(q.word.name);
