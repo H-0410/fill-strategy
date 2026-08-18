@@ -630,8 +630,22 @@ class _QuizPageState extends State<QuizPage> {
   bool showImmediately = true;
   final started = DateTime.now();
   final results = <AnswerResult>[];
+  int _recordedMinutes = 0;
+  bool _minutesFinalized = false;
 
   ExerciseQuestion get q => widget.questions[index];
+
+  @override
+  void dispose() {
+    // 页面销毁时记录剩余学习时长（防止中途退出丢失）
+    if (!_minutesFinalized) {
+      final elapsed = DateTime.now().difference(started).inMinutes;
+      if (elapsed > _recordedMinutes) {
+        widget.state.recordMinutes(elapsed - _recordedMinutes);
+      }
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -969,6 +983,12 @@ class _QuizPageState extends State<QuizPage> {
     }
     // 实时记录答题统计
     await widget.state.recordAnswer(q.word.groupId, correctAnswer);
+    // 实时记录学习时长（增量）
+    final currentMin = DateTime.now().difference(started).inMinutes;
+    if (currentMin > _recordedMinutes) {
+      await widget.state.recordMinutes(currentMin - _recordedMinutes);
+      _recordedMinutes = currentMin;
+    }
     results.add(
       AnswerResult(
         question: q,
@@ -982,8 +1002,12 @@ class _QuizPageState extends State<QuizPage> {
   void _next() {
     if (index == widget.questions.length - 1) {
       final elapsed = DateTime.now().difference(started).inMinutes;
-      // 只记录学习时长，答题数据已在_submit中实时记录
-      widget.state.recordMinutes(elapsed);
+      // 记录剩余学习时长并标记已完成
+      if (elapsed > _recordedMinutes) {
+        widget.state.recordMinutes(elapsed - _recordedMinutes);
+        _recordedMinutes = elapsed;
+      }
+      _minutesFinalized = true;
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -2186,9 +2210,11 @@ class _MistakesPageState extends State<MistakesPage> {
         ),
       );
     }
-    final word = words[reviewIndex];
     return StatefulBuilder(
-      builder: (context, setSt) => Container(
+      builder: (context, setSt) {
+        // word 必须在 builder 内部读取，切换时才能更新
+        final word = words[reviewIndex];
+        return Container(
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -2268,8 +2294,9 @@ class _MistakesPageState extends State<MistakesPage> {
               ],
             ),
           ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -2315,29 +2342,32 @@ class StatisticsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final data = state.store.stats;
-    final total = data['total'] as int;
-    final correct = data['correct'] as int;
-    final minutes = data['minutes'] as int;
-    final groups =
-        Map<String, dynamic>.from(data['groups'] as Map? ?? {});
-    final rate = total == 0 ? 0 : correct * 100 ~/ total;
+    return AnimatedBuilder(
+      animation: state,
+      builder: (context, _) {
+        final data = state.store.stats;
+        final total = data['total'] as int;
+        final correct = data['correct'] as int;
+        final minutes = data['minutes'] as int;
+        final groups =
+            Map<String, dynamic>.from(data['groups'] as Map? ?? {});
+        final rate = total == 0 ? 0 : correct * 100 ~/ total;
 
-    // 计算各章节正确率
-    final chapterRates = <int, double>{};
-    for (final chapter in state.chapters) {
-      int t = 0, c = 0;
-      for (final group in chapter.groups) {
-        final gData = Map<String, dynamic>.from(
-          groups['${group.id}'] as Map? ?? {'total': 0, 'correct': 0},
-        );
-        t += gData['total'] as int;
-        c += gData['correct'] as int;
-      }
-      chapterRates[chapter.id] = t == 0 ? 0 : c * 100 / t;
-    }
+        // 计算各章节正确率
+        final chapterRates = <int, double>{};
+        for (final chapter in state.chapters) {
+          int t = 0, c = 0;
+          for (final group in chapter.groups) {
+            final gData = Map<String, dynamic>.from(
+              groups['${group.id}'] as Map? ?? {'total': 0, 'correct': 0},
+            );
+            t += gData['total'] as int;
+            c += gData['correct'] as int;
+          }
+          chapterRates[chapter.id] = t == 0 ? 0 : c * 100 / t;
+        }
 
-    return Scaffold(
+        return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         foregroundColor: textPrimary,
@@ -2514,6 +2544,8 @@ class StatisticsPage extends StatelessWidget {
           ),
         ],
       ),
+        );
+      },
     );
   }
 
