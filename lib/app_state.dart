@@ -66,6 +66,18 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// 实时记录单题答题结果
+  Future<void> recordAnswer(int groupId, bool isCorrect) async {
+    await store.recordAnswer(groupId, isCorrect);
+    notifyListeners();
+  }
+
+  /// 记录学习时长
+  Future<void> recordMinutes(int minutes) async {
+    await store.recordMinutes(minutes);
+    notifyListeners();
+  }
+
   Future<void> setNote(String name, String note) async {
     await store.setNote(name, note);
     notes = store.notes;
