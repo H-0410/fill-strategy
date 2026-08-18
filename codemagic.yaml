@@ -4,11 +4,11 @@ workflows:
     instance_type: mac_mini_m2
     max_build_duration: 60
     environment:
-      flutter: 3.22.2
+      flutter: latest
       vars:
         FLUTTER_GRADLE_GENERATE_LOCAL_MAVEN: "false"
     scripts:
       - name: Build Android APK
         script: flutter build apk --release
     artifacts:
-      - build/app/outputs/flutter-apk/app-release.apk
+      - build/app/outputs/flutter‑apk/app‑release.apk
