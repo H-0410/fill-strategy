@@ -60,6 +60,12 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> removeWrong(String name) async {
+    await store.removeWrong(name);
+    wrongCounts = store.wrongCounts;
+    notifyListeners();
+  }
+
   Future<void> setNote(String name, String note) async {
     await store.setNote(name, note);
     notes = store.notes;
