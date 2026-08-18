@@ -967,6 +967,8 @@ class _QuizPageState extends State<QuizPage> {
     if (!correctAnswer) {
       await widget.state.wrong(q.word.name);
     }
+    // 实时记录答题统计
+    await widget.state.recordAnswer(q.word.groupId, correctAnswer);
     results.add(
       AnswerResult(
         question: q,
@@ -980,23 +982,8 @@ class _QuizPageState extends State<QuizPage> {
   void _next() {
     if (index == widget.questions.length - 1) {
       final elapsed = DateTime.now().difference(started).inMinutes;
-      final scores = <int, List<int>>{};
-      for (final result in results) {
-        final score = scores.putIfAbsent(
-          result.question.word.groupId,
-          () => [0, 0],
-        );
-        score[0]++;
-        if (result.correct) {
-          score[1]++;
-        }
-      }
-      widget.state.store.record(
-        total: results.length,
-        correct: correct,
-        minutes: elapsed,
-        groupScore: scores,
-      );
+      // 只记录学习时长，答题数据已在_submit中实时记录
+      widget.state.recordMinutes(elapsed);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
