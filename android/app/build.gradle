@@ -1,23 +1,8 @@
 plugins {
     id "com.android.application"
     id "org.jetbrains.kotlin.android"
+    id "dev.flutter.flutter-gradle-plugin"
 }
-
-def flutterSdkPath = {
-    Properties properties = new Properties()
-    File localPropertiesFile = rootProject.file("local.properties");
-    if (localPropertiesFile.exists()) {
-        localPropertiesFile.withReader("UTF-8") { reader ->
-            properties.load(reader)
-        }
-    }
-    def flutterSdkPath = properties.getProperty("flutter.sdk");
-    assert flutterSdkPath != null : "flutter.sdk not set in local.properties";
-    return flutterSdkPath;
-}()
-
-apply from: "$flutterSdkPath/packages/flutter_tools/gradle/flutter.gradle"
-
 
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file("local.properties")
