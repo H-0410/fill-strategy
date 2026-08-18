@@ -1,0 +1,42 @@
+name: Flutter编译生成APK
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: # 支持网页手动点按钮触发编译
+
+jobs:
+  build_android_apk:
+    runs‑on: ubuntu‑latest
+    steps:
+      #①拉取仓库全部代码
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      #②安装Java环境，编译安卓必须
+      - name: Setup Java 17
+        uses: actions/setup‑java@v4
+        with:
+          distribution: 'zulu'
+          java‑version: '17'
+
+      #③安装Flutter SDK
+      - name: Setup Flutter
+        uses: subosito/flutter‑action@v2
+        with:
+          flutter‑version: '3.24.0'
+          channel: stable
+
+      #④下载项目依赖包
+      - name: flutter pub get
+        run: flutter pub get
+
+      #⑤编译release正式版apk
+      - name: Build Release APK
+        run: flutter build apk --release --target‑platform android‑arm64
+
+      #⑥把编译出来的apk保存为可下载产物Artifacts
+      - name: 上传APK产物
+        uses: actions/upload‑artifact@v4
+        with:
+          name: 填空策‑apk安装包
+          path: build/app/outputs/flutter‑apk/app‑release.apk
