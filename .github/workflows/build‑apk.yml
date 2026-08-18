@@ -37,6 +37,7 @@ jobs:
       - name: Flutter pub get
         run: flutter pub get
 
-      - name: Build Release APK
-        run: flutter build apk --release --target-platform android-arm64
+      - name: Run flutter build apk --release
+        run: flutter build apk --release
+
 
