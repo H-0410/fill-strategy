@@ -1,0 +1,118 @@
+{
+  "chapterList": [
+    {
+      "chapterId": 1,
+      "chapterTitle": "第一章：事态演变与应对方式",
+      "groupList": [
+        {
+          "groupId": 1,
+          "groupTitle": "第1组｜发展情况",
+          "words": [
+            {
+              "wordName": "呼之欲出",
+              "colorTag": "中偏褒",
+              "emphasis": "侧重：①画作/文字里的人物形象刻画极其生动逼真；②马上就要正式推出、落地面世",
+              "explain": "仿佛一叫就要从画里走出来。侧重画作或文字中的形象生动逼真，也指事物即将面世。",
+              "sentence": "不远处的新园区正在加快建设，一派欣欣向荣，呼之欲出。",
+              "examSentence": "伴随着新质生产力概念的提出，一个文化领域的新质态呼之欲出。",
+              "compareWords": ["粉墨登场", "崭露头角", "异军突起"]
+            },
+            {
+              "wordName": "粉墨登场",
+              "colorTag": "贬",
+              "emphasis": "侧重：比喻心怀私欲、品行不端的人登上政坛、掌控局面",
+              "explain": "演员化妆抹粉、勾画脸谱登台表演。比喻心怀私欲、品行不端的人登上政治舞台。",
+              "sentence": "投机者打着公益旗号谋取私利，最终被群众揭穿。",
+              "examSentence": "一些投机者粉墨登场，试图左右舆论方向。",
+              "compareWords": ["呼之欲出", "崭露头角"]
+            },
+            {
+              "wordName": "崭露头角",
+              "colorTag": "褒",
+              "emphasis": "侧重：初显才能或本领，常用于新人成长",
+              "explain": "比喻突出地显露出才能和本领。",
+              "sentence": "这位青年科学家在基础研究领域崭露头角。",
+              "examSentence": "越来越多青年人才在创新实践中崭露头角。",
+              "compareWords": ["呼之欲出", "异军突起"]
+            }
+          ]
+        },
+        {
+          "groupId": 2,
+          "groupTitle": "第2组｜事前防范",
+          "words": [
+            {
+              "wordName": "居安思危",
+              "colorTag": "褒",
+              "emphasis": "侧重：仅停留在思想层面，强调保有危机意识，不涉及落地的防备行动",
+              "explain": "身处安定顺遂的环境，心中仍思虑潜藏的危险。强调保持危机意识。",
+              "sentence": "经济平稳增长时，仍要居安思危，储备政策工具。",
+              "examSentence": "我们要进一步增强忧患意识，始终居安思危，保持清醒头脑。",
+              "compareWords": ["未雨绸缪", "防患未然"]
+            },
+            {
+              "wordName": "未雨绸缪",
+              "colorTag": "褒",
+              "emphasis": "侧重：事先做好准备，强调已经采取具体行动",
+              "explain": "趁着天没下雨，先修缮门窗。比喻事先做好准备。",
+              "sentence": "面对极端天气，城市应未雨绸缪完善排水系统。",
+              "examSentence": "只有未雨绸缪，才能从容应对突发风险。",
+              "compareWords": ["居安思危", "防患未然"]
+            },
+            {
+              "wordName": "防患未然",
+              "colorTag": "褒",
+              "emphasis": "侧重：在事故或灾害发生前消除隐患，强调结果",
+              "explain": "在祸患尚未发生时就加以预防。",
+              "sentence": "定期排查安全隐患，是防患未然的重要举措。",
+              "examSentence": "完善监管机制，才能真正做到防患未然。",
+              "compareWords": ["居安思危", "未雨绸缪"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "chapterId": 2,
+      "chapterTitle": "第二章：创新与守旧",
+      "groupList": [
+        {
+          "groupId": 3,
+          "groupTitle": "第3组｜创新突破",
+          "words": [
+            {"wordName":"异军突起","colorTag":"褒","emphasis":"侧重：新的力量突然崛起并取得突出成绩","explain":"比喻一支新生力量突然出现并取得独特成绩。","sentence":"新技术企业在竞争中异军突起。","examSentence":"一批专精特新企业异军突起。","compareWords":["崭露头角","脱颖而出"]},
+            {"wordName":"推陈出新","colorTag":"褒","emphasis":"侧重：去掉旧的，创造新的，强调更新过程","explain":"清除旧的，建立新的。","sentence":"传统文化在传承中不断推陈出新。","examSentence":"文艺创作需要推陈出新。","compareWords":["革故鼎新","吐故纳新"]}
+          ]
+        }
+      ]
+    },
+    {
+      "chapterId": 3,
+      "chapterTitle": "第三章：因果关系",
+      "groupList": [
+        {"groupId":4,"groupTitle":"第4组｜原因与结果","words":[{"wordName":"水到渠成","colorTag":"褒","emphasis":"侧重：条件成熟后事情自然成功","explain":"水流到的地方自然形成水道。比喻条件成熟，事情自然成功。","sentence":"基础工作扎实，项目落地水到渠成。","examSentence":"经过长期积累，成果水到渠成。","compareWords":["瓜熟蒂落","顺理成章"]}]}
+      ]
+    },
+    {
+      "chapterId": 4,
+      "chapterTitle": "第四章：程度轻重",
+      "groupList": [
+        {"groupId":5,"groupTitle":"第5组｜程度轻重","words":[{"wordName":"差强人意","colorTag":"中性","emphasis":"侧重：大体上还能让人满意，不能误解为很不满意","explain":"大体上还能使人满意。","sentence":"这份答卷虽然不完美，但总体差强人意。","examSentence":"改革成效差强人意，仍需继续努力。","compareWords":["不尽如人意","大失所望"]}]}
+      ]
+    },
+    {
+      "chapterId": 5,
+      "chapterTitle": "第五章：言语表达",
+      "groupList": [
+        {"groupId":6,"groupTitle":"第6组｜表达方式","words":[{"wordName":"言简意赅","colorTag":"褒","emphasis":"侧重：语言简练而意思完整明确","explain":"语言简练而意思完备。","sentence":"他的发言言简意赅，重点突出。","examSentence":"报告用语言简意赅，便于群众理解。","compareWords":["长篇大论","简明扼要"]}]}
+      ]
+    },
+    {
+      "chapterId": 6,
+      "chapterTitle": "第六章：态度与评价",
+      "groupList": [
+        {"groupId":7,"groupTitle":"第7组｜态度评价","words":[{"wordName":"首当其冲","colorTag":"中性","emphasis":"侧重：最先受到冲击或遭遇灾难，不能理解为最重要","explain":"比喻最先受到攻击或遭遇灾害。","sentence":"沿海地区在台风来临时首当其冲。","examSentence":"基础设施薄弱地区往往首当其冲。","compareWords":["一马当先","首屈一指"]}]}
+      ]
+    }
+  ]
+}
