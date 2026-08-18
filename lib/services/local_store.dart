@@ -54,6 +54,12 @@ class LocalStore {
     await prefs.setString('wrong_counts', jsonEncode(values));
   }
 
+  Future<void> removeWrong(String word) async {
+    final values = wrongCounts;
+    values.remove(word);
+    await prefs.setString('wrong_counts', jsonEncode(values));
+  }
+
   bool get eyeCare => prefs.getBool('eye_care') ?? false;
 
   double get fontScale => prefs.getDouble('font_scale') ?? 1;
