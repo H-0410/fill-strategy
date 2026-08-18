@@ -15,6 +15,9 @@ workflows:
       - name: 修改settings.gradle，升级kotlin插件到1.9.20
         script: |
           sed -i '' 's/id "org.jetbrains.kotlin.android" version "[0-9.]*"/id "org.jetbrains.kotlin.android" version "1.9.20"/' android/settings.gradle
+      - name: 修改APP名称为行策词鉴
+        script: |
+          sed -i '' 's/android:label="[^"]*"/android:label="行策词鉴"/' android/app/src/main/AndroidManifest.xml
       - name: flutter pub get
         script: flutter pub get
       - name: compile release apk
