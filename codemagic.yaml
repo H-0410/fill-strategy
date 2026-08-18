@@ -4,11 +4,17 @@ workflows:
     instance_type: mac_mini_m2
     max_build_duration: 60
     environment:
-      flutter: latest
+      flutter: 3.24.0
       vars:
         FLUTTER_GRADLE_GENERATE_LOCAL_MAVEN: "false"
     scripts:
-      - name: Build Android APK
+      - name: 删除旧android目录，云端重新创建安卓工程
+        script: |
+          rm -rf android
+          flutter create --platforms android .
+      - name: flutter pub get
+        script: flutter pub get
+      - name: compile release apk
         script: flutter build apk --release
     artifacts:
-      - build/app/outputs/flutter‑apk/app‑release.apk
+      - build/app/outputs/flutter-apk/app-release.apk
