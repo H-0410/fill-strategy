@@ -1,4 +1,39 @@
 import 'package:flutter/material.dart';
 
-const primaryBlue = Color(0xFF2B65D8), accentOrange = Color(0xFFFF7D00), successGreen = Color(0xFF00B42A), dangerRed = Color(0xFFF53F3F), neutralGray = Color(0xFF86909C);
-ThemeData buildTheme({required bool eyeCare, required double scale}) => ThemeData(useMaterial3: true, scaffoldBackgroundColor: eyeCare ? const Color(0xFFFFF9E8) : const Color(0xFFF7F8FA), colorScheme: ColorScheme.fromSeed(seedColor: primaryBlue), textTheme: ThemeData.light().textTheme.apply(fontSizeFactor: scale, bodyColor: const Color(0xFF1D2129), displayColor: const Color(0xFF1D2129)), cardTheme: CardTheme(color: Colors.white, elevation: 0, margin: const EdgeInsets.only(bottom: 12), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))), appBarTheme: const AppBarTheme(centerTitle: true, backgroundColor: Colors.transparent, elevation: 0));
+const primaryBlue = Color(0xFF2B65D8);
+const accentOrange = Color(0xFFFF7D00);
+const successGreen = Color(0xFF00B42A);
+const dangerRed = Color(0xFFF53F3F);
+const neutralGray = Color(0xFF86909C);
+
+ThemeData buildTheme({
+  required bool eyeCare,
+  required double scale,
+}) {
+  return ThemeData(
+    useMaterial3: true,
+    scaffoldBackgroundColor: eyeCare
+        ? const Color(0xFFFFF9E8)
+        : const Color(0xFFF7F8FA),
+    colorScheme: ColorScheme.fromSeed(seedColor: primaryBlue),
+    textTheme: ThemeData.light().textTheme.apply(
+          fontSizeFactor: scale,
+          bodyColor: const Color(0xFF1D2129),
+          displayColor: const Color(0xFF1D2129),
+        ),
+    cardTheme: CardThemeData(
+      surfaceTintColor: Colors.white,
+      elevation: 0,
+      margin: const EdgeInsets.only(bottom: 12),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+    ),
+    appBarTheme: const AppBarTheme(
+      centerTitle: true,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+    ),
+  );
+}
+
