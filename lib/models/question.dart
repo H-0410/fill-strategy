@@ -1,8 +1,8 @@
 import 'word.dart';
 
 enum ExerciseMode {
-  explainToWord,
-  wordToExplain,
+  emphasisToWord,
+  wordToEmphasis,
   confusing,
   examBlank,
 }
@@ -12,6 +12,7 @@ class ExerciseQuestion {
     required this.word,
     required this.prompt,
     required this.options,
+    required this.optionWords,
     required this.correctIndex,
     required this.mode,
   });
@@ -19,6 +20,9 @@ class ExerciseQuestion {
   final WordEntry word;
   final String prompt;
   final List<String> options;
+  /// The word represented by each option, retained so every option can be
+  /// explained after the answer is submitted.
+  final List<WordEntry> optionWords;
   final int correctIndex;
   final ExerciseMode mode;
 }
@@ -34,4 +38,3 @@ class AnswerResult {
   final int selectedIndex;
   final bool correct;
 }
-
