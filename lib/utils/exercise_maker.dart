@@ -28,32 +28,30 @@ class ExerciseMaker {
 
     final chosen = pool.take(min(count, pool.length)).toList();
     return chosen.map((word) {
-      final options = _options(word, selected, pool, random, mode);
-      final correct = options.indexOf(_answer(word, mode));
+      final optionWords = _optionWords(word, selected, pool, random, mode);
+      final options = optionWords
+          .map((item) => mode == ExerciseMode.wordToEmphasis
+              ? item.emphasis
+              : item.name)
+          .toList();
+      final correct = optionWords.indexWhere((item) => item.name == word.name);
       return ExerciseQuestion(
         word: word,
         prompt: _prompt(word, mode),
         options: options,
+        optionWords: optionWords,
         correctIndex: correct < 0 ? 0 : correct,
         mode: mode,
       );
     }).toList();
   }
 
-  static String _answer(WordEntry word, ExerciseMode mode) {
-    return mode == ExerciseMode.explainToWord
-        ? word.name
-        : mode == ExerciseMode.wordToExplain
-            ? word.explain
-            : word.name;
-  }
-
   static String _prompt(WordEntry word, ExerciseMode mode) {
     switch (mode) {
-      case ExerciseMode.explainToWord:
-        return '根据释义选择最恰当的词语：\n${word.explain}';
-      case ExerciseMode.wordToExplain:
-        return '请选择「${word.name}」的正确释义';
+      case ExerciseMode.emphasisToWord:
+        return '根据侧重点选择最恰当的词语：\n${word.emphasis}';
+      case ExerciseMode.wordToEmphasis:
+        return '请选择「${word.name}」的正确侧重点';
       case ExerciseMode.confusing:
         return '${word.sentence.replaceAll(word.name, '____')}\n请选择最恰当的词语';
       case ExerciseMode.examBlank:
@@ -64,19 +62,17 @@ class ExerciseMaker {
     }
   }
 
-  static List<String> _options(
+  static List<WordEntry> _optionWords(
     WordEntry word,
     List<WordGroup> selected,
     List<WordEntry> pool,
     Random random,
     ExerciseMode mode,
   ) {
-    final answer = _answer(word, mode);
-    if (mode == ExerciseMode.wordToExplain) {
+    if (mode == ExerciseMode.wordToEmphasis) {
       final same = pool.where((item) => item.name != word.name).toList()
         ..shuffle(random);
-      return [answer, ...same.take(3).map((item) => item.explain)].toList()
-        ..shuffle(random);
+      return [word, ...same.take(3)].toList()..shuffle(random);
     }
 
     final sameGroup = selected
@@ -98,7 +94,6 @@ class ExerciseMaker {
       ...sameGroup.where((item) => !preferred.contains(item)),
       ...pool.where((item) => item.groupId != word.groupId),
     ];
-    return [answer, ...candidates.take(3).map((item) => item.name)].toList()
-      ..shuffle(random);
+    return [word, ...candidates.take(3)].toList()..shuffle(random);
   }
 }
