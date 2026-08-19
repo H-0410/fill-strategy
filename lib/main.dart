@@ -195,7 +195,7 @@ class PracticePage extends StatefulWidget {
 
 class _PracticePageState extends State<PracticePage> {
   final expanded = <int>{1};
-  ExerciseMode mode = ExerciseMode.explainToWord;
+  ExerciseMode mode = ExerciseMode.emphasisToWord;
   double count = 20;
   bool shuffle = true;
 
@@ -313,8 +313,8 @@ class _PracticePageState extends State<PracticePage> {
                   physics: const NeverScrollableScrollPhysics(),
                   childAspectRatio: 3.2,
                   children: [
-                    _modeRadio(ExerciseMode.explainToWord, '释义选词语'),
-                    _modeRadio(ExerciseMode.wordToExplain, '词语选释义'),
+                    _modeRadio(ExerciseMode.emphasisToWord, '侧重点选词语'),
+                    _modeRadio(ExerciseMode.wordToEmphasis, '词语选侧重点'),
                     _modeRadio(ExerciseMode.confusing, '易混辨析题（国考重点）'),
                     _modeRadio(ExerciseMode.examBlank, '真题挖空模式'),
                   ],
@@ -796,7 +796,7 @@ class _QuizPageState extends State<QuizPage> {
 
     // 尝试获取选项词语的褒贬标签
     String? optionTag;
-    if (q.mode != ExerciseMode.wordToExplain) {
+    if (q.mode != ExerciseMode.wordToEmphasis) {
       final w = widget.state.wordByName(q.options[optionIndex]);
       if (w != null) optionTag = w.colorTag;
     }
@@ -910,28 +910,89 @@ class _QuizPageState extends State<QuizPage> {
             ],
           ),
           const SizedBox(height: 14),
-          emphasisText(q.word.emphasis),
-          const SizedBox(height: 12),
-          _detailRow(Icons.menu_book, '释义', q.word.explain),
-          if (q.word.sentence.isNotEmpty)
-            _detailRow(Icons.edit_note, '普通例句', q.word.sentence),
-          if (q.word.examSentence.isNotEmpty)
-            _detailRow(Icons.article, '真题例句', q.word.examSentence),
-          if (q.word.compareWords.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Text(
-                '错误选项辨析：${q.word.compareWords.join('、')} 等词语侧重点各有不同……',
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: textSecondary,
-                  height: 1.6,
-                ),
-              ),
+          const Text(
+            '四个选项解析',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: textPrimary,
             ),
+          ),
+          const SizedBox(height: 6),
+          const Text(
+            '展开任一选项即可查看它的侧重点、释义和例句。',
+            style: TextStyle(fontSize: 14, color: textSecondary),
+          ),
+          const SizedBox(height: 6),
+          ...q.optionWords.map(_optionAnalysis),
           const SizedBox(height: 12),
           GestureDetector(
             onTap: () => _details(q.word),
+            child: const Text(
+              '查看完整词语详情 →',
+              style: TextStyle(
+                color: primaryBlue,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _optionAnalysis(WordEntry word) {
+    final isCorrect = word.name == q.word.name;
+    return Container(
+      margin: const EdgeInsets.only(top: 8),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.72),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: isCorrect ? successGreen.withOpacity(0.55) : dividerColor,
+        ),
+      ),
+      child: ExpansionTile(
+        initiallyExpanded: isCorrect,
+        tilePadding: const EdgeInsets.symmetric(horizontal: 12),
+        childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+        title: Row(
+          children: [
+            Expanded(
+              child: Text(
+                word.name,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: textPrimary,
+                ),
+              ),
+            ),
+            tag(word.colorTag),
+            if (isCorrect) ...[
+              const SizedBox(width: 6),
+              const Text(
+                '正确答案',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: successGreen,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ],
+        ),
+        children: [
+          emphasisText(word.emphasis),
+          const SizedBox(height: 12),
+          _detailRow(Icons.menu_book, '释义', word.explain),
+          if (word.sentence.isNotEmpty)
+            _detailRow(Icons.edit_note, '普通例句', word.sentence),
+          if (word.examSentence.isNotEmpty)
+            _detailRow(Icons.article, '真题例句', word.examSentence),
+          GestureDetector(
+            onTap: () => _details(word),
             child: const Text(
               '查看完整词语详情 →',
               style: TextStyle(
@@ -1022,6 +1083,7 @@ class _QuizPageState extends State<QuizPage> {
             state: widget.state,
             results: results,
             duration: DateTime.now().difference(started),
+            showQuestionAnalysis: !showImmediately,
           ),
         ),
       );
@@ -1082,11 +1144,13 @@ class ReportPage extends StatelessWidget {
     required this.state,
     required this.results,
     required this.duration,
+    required this.showQuestionAnalysis,
   });
 
   final AppState state;
   final List<AnswerResult> results;
   final Duration duration;
+  final bool showQuestionAnalysis;
 
   @override
   Widget build(BuildContext context) {
@@ -1286,6 +1350,35 @@ class ReportPage extends StatelessWidget {
               ),
             ),
 
+          if (showQuestionAnalysis)
+            cardContainer(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    '本次题目解析',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  const Text(
+                    '展开题目即可查看四个选项的侧重点与释义。',
+                    style: TextStyle(fontSize: 14, color: textSecondary),
+                  ),
+                  const SizedBox(height: 8),
+                  ...results.indexed.map(
+                    (item) => _questionAnalysis(
+                      context,
+                      item.$1 + 1,
+                      item.$2,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
           const SizedBox(height: 8),
           // 底部按钮
           Row(
@@ -1320,7 +1413,7 @@ class ReportPage extends StatelessWidget {
                   groups: state.allGroups,
                   selectedGroupIds:
                       wrong.map((word) => word.groupId).toSet().toList(),
-                  mode: ExerciseMode.explainToWord,
+                  mode: ExerciseMode.emphasisToWord,
                   count: wrong.length,
                   shuffle: false,
                 );
@@ -1338,6 +1431,53 @@ class ReportPage extends StatelessWidget {
           ],
         ],
       ),
+    );
+  }
+
+  Widget _questionAnalysis(
+    BuildContext context,
+    int questionNumber,
+    AnswerResult result,
+  ) {
+    return ExpansionTile(
+      tilePadding: EdgeInsets.zero,
+      title: Text(
+        '第 $questionNumber 题 · ${result.question.word.name}',
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+      ),
+      subtitle: Text(
+        result.correct ? '回答正确' : '回答错误',
+        style: TextStyle(color: result.correct ? successGreen : dangerRed),
+      ),
+      children: result.question.optionWords.map((word) {
+        final isCorrect = word.name == result.question.word.name;
+        return ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+          title: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  word.name,
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
+              ),
+              tag(word.colorTag),
+              if (isCorrect) ...[
+                const SizedBox(width: 6),
+                const Icon(Icons.check_circle, color: successGreen, size: 18),
+              ],
+            ],
+          ),
+          subtitle: Text('侧重点：${word.emphasis}\n释义：${word.explain}'),
+          isThreeLine: true,
+          onTap: () => showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent,
+            builder: (_) => WordDetail(word: word, state: state),
+          ),
+        );
+      }).toList(),
     );
   }
 
@@ -1951,7 +2091,7 @@ class _MistakesPageState extends State<MistakesPage> {
                                       state.wordByName(name)!.groupId)
                                   .toSet()
                                   .toList(),
-                              mode: ExerciseMode.explainToWord,
+                              mode: ExerciseMode.emphasisToWord,
                               count: selected.length,
                               shuffle: false,
                             );
